@@ -1,0 +1,112 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert --file docker-compose.yaml
+    kompose.version: 1.26.0 (40646f47)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: litespeed
+  name: litespeed
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: litespeed
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert --file docker-compose.yaml
+        kompose.version: 1.26.0 (40646f47)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: litespeed
+    spec:
+      containers:
+        - env:
+            - name: DOMAIN
+              valueFrom:
+                configMapKeyRef:
+                  key: DOMAIN
+                  name: env
+            - name: MYSQL_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  key: MYSQL_DATABASE
+                  name: env
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  key: MYSQL_PASSWORD
+                  name: env
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  key: MYSQL_ROOT_PASSWORD
+                  name: env
+            - name: MYSQL_USER
+              valueFrom:
+                configMapKeyRef:
+                  key: MYSQL_USER
+                  name: env
+            - name: OLS_VERSION
+              valueFrom:
+                configMapKeyRef:
+                  key: OLS_VERSION
+                  name: env
+            - name: PHP_VERSION
+              valueFrom:
+                configMapKeyRef:
+                  key: PHP_VERSION
+                  name: env
+            - name: TZ
+            - name: TimeZone
+              valueFrom:
+                configMapKeyRef:
+                  key: TimeZone
+                  name: env
+          image: litespeedtech/openlitespeed
+          name: litespeed
+          ports:
+            - containerPort: 80
+            - containerPort: 443
+            - containerPort: 443
+              protocol: UDP
+            - containerPort: 7080
+          resources: {}
+          volumeMounts:
+            - mountPath: /usr/local/lsws/conf
+              name: litespeed-claim0
+            - mountPath: /usr/local/lsws/admin/conf
+              name: litespeed-claim1
+            - mountPath: /usr/local/bin
+              name: litespeed-claim2
+            - mountPath: /var/www/vhosts/
+              name: litespeed-claim3
+            - mountPath: /root/.acme.sh/
+              name: litespeed-claim4
+            - mountPath: /usr/local/lsws/logs/
+              name: litespeed-claim5
+      restartPolicy: Always
+      volumes:
+        - name: litespeed-claim0
+          persistentVolumeClaim:
+            claimName: litespeed-claim0
+        - name: litespeed-claim1
+          persistentVolumeClaim:
+            claimName: litespeed-claim1
+        - name: litespeed-claim2
+          persistentVolumeClaim:
+            claimName: litespeed-claim2
+        - name: litespeed-claim3
+          persistentVolumeClaim:
+            claimName: litespeed-claim3
+        - name: litespeed-claim4
+          persistentVolumeClaim:
+            claimName: litespeed-claim4
+        - name: litespeed-claim5
+          persistentVolumeClaim:
+            claimName: litespeed-claim5
+status: {}

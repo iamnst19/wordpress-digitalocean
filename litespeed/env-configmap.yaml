@@ -1,0 +1,16 @@
+apiVersion: v1
+data:
+  DOMAIN: localhost
+  MYSQL_DATABASE: wordpress
+  MYSQL_PASSWORD: password@123
+  MYSQL_ROOT_PASSWORD: password@123
+  MYSQL_USER: wordpress
+  OLS_VERSION: 1.7.11
+  PHP_VERSION: lsphp80
+  TimeZone: America/New_York
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  labels:
+    io.kompose.service: litespeed-env
+  name: env
